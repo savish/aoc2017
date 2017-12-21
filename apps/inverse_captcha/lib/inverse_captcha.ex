@@ -1,18 +1,16 @@
 defmodule InverseCaptcha do
   @moduledoc """
   The inverse captcha module allows you to review a sequence of digits and find 
-  the sum of all digits that match the next digit in the list. 
-
-  The list is circular, so the digit after the last digit is the first digit 
-  in the list.
+  the sum of all digits that match the digit halfway around the circular list.
 
   ## Sample:
-  - 1122 produces a sum of 3 (1 + 2) because the first digit (1) matches the 
-    second digit and the third digit (2) matches the fourth digit.
-  - 1111 produces 4 because each digit (all 1) matches the next.
-  - 1234 produces 0 because no digit matches the next.
-  - 91212129 produces 9 because the only digit that matches the next one is the 
-    last digit, 9.
+  - 1212 produces 6: the list contains 4 items, and all four digits match the 
+    digit 2 items ahead.
+  - 1221 produces 0, because every comparison is between a 1 and a 2.
+  - 123425 produces 4, because both 2s match each other, but no other digit has 
+    a match.
+  - 123123 produces 12.
+  - 12131415 produces 4.
 
   """
 
@@ -29,8 +27,8 @@ defmodule InverseCaptcha do
 
   ## Examples 
 
-      iex> InverseCaptcha.solve("112234556677")
-      21
+      iex> InverseCaptcha.solve("1212")
+      6
 
   """
   def solve(input_string) do
@@ -39,7 +37,10 @@ defmodule InverseCaptcha do
       |> String.graphemes()
       |> Enum.map(&String.to_integer(&1))
 
-    Enum.zip([digits, tl(digits) ++ [hd(digits)]])
+    half_count = round(length(digits) / 2)
+    split_digits = Enum.chunk(digits, half_count, half_count)
+
+    Enum.zip([digits, List.flatten(tl(split_digits) ++ [hd(split_digits)])])
     |> Enum.reduce(0, fn tp, acc -> tuple_sum(tp) + acc end)
   end
 end
