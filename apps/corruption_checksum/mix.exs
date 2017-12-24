@@ -1,9 +1,9 @@
-defmodule InverseCaptcha.MixProject do
+defmodule CorruptionChecksum.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :inverse_captcha,
+      app: :corruption_checksum,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -11,13 +11,7 @@ defmodule InverseCaptcha.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.6-dev",
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
-
-      # Docs
-      name: "Inverse Captcha",
-      source_url: "https://github.com/savish/aoc2017",
-      # The main page in the docs
-      docs: [main: "InverseCaptcha", extras: ["README.md"]]
+      deps: deps()
     ]
   end
 
